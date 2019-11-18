@@ -1,0 +1,8 @@
+DB:
+  Redis: 
+  Mongo:
+    - Name: 
+      ConnectStr: 
+ServerPort: :9999
+Domain: 
+Token: 

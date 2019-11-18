@@ -1,0 +1,15 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"files.exclude": {
+			"*.code-workspace": true,
+			"*.md": true,
+			".gitignore": true,
+			"__debug_bin": true
+		}
+	}
+}
