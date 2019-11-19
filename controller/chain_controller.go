@@ -43,24 +43,25 @@ func RedirectTo(c *gin.Context) {
 	shortid := c.Param("shortid")
 	ip := c.GetHeader("X_REAL_IP")
 
-	chain := &model.ChainInfo{}
-	if err := services.FindOne(bson.M{"shortid": shortid, "status": 1}, chain); err != nil {
-		// 404
-		c.JSON(http.StatusNotFound, result.ResultNoData(result.NOTFOUND, "无效的短链"))
-	}
-
-	data := &model.UseRecord{
-		Appid:      chain.Appid,
-		ShortId:    shortid,
-		LongChain:  chain.LongChain,
-		HostIP:     ip,
-		CreateTime: time.Now()}
-	if err := services.Create(data); err != nil {
-		fmt.Printf("保存跳转记录失败： %v", err)
-	}
-	c.Redirect(http.StatusMovedPermanently, chain.LongChain)
-}
-
-func Test(c *gin.Context) {
-	c.JSON(200, gin.H{"code": 200})
+	ch := make(chan string, 1)
+	go func() {
+		defer close(ch)
+		chain := &model.ChainInfo{}
+		if err := services.FindOne(bson.M{"shortid": shortid, "status": 1}, chain); err != nil {
+			// 404
+			ch <- "/404.html"
+			return
+		}
+		ch <- chain.LongChain
+		data := &model.UseRecord{
+			Appid:      chain.Appid,
+			ShortId:    shortid,
+			LongChain:  chain.LongChain,
+			HostIP:     ip,
+			CreateTime: time.Now()}
+		if err := services.Create(data); err != nil {
+			fmt.Printf("保存跳转记录失败： %v", err)
+		}
+	}()
+	c.Redirect(http.StatusMovedPermanently, <-ch)
 }

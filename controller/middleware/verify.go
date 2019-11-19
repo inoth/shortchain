@@ -18,7 +18,7 @@ import (
 func RequestVerify(c *gin.Context) {
 
 	cp := c.Copy()
-	ch := make(chan int)
+	ch := make(chan int, 1)
 	go func() {
 		defer close(ch)
 

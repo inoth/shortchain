@@ -1,0 +1,10 @@
+version: '3'
+services:
+  shortchain:
+    image: shortchain:v0.0.1
+    ports:
+      - "9999:9999"
+    deploy:
+      replicas: 3
+    volumes:
+      - /vol/shortchain/conf/conf.yml:/app/conf.yml
