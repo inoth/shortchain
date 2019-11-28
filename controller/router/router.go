@@ -19,7 +19,11 @@ func Init() {
 	url := r.Group("chain", mid.RequestVerify)
 	url.POST("/add", controller.GenerateShortChain)
 
-	r.Any("/go/:shortid", controller.RedirectTo)
+	r.GET("/go/:shortid", controller.RedirectTo)
+
+	r.GET("/health", func(c *gin.Context) {
+		c.JSON(200, gin.H{"msg": "ok"})
+	})
 
 	r.Run(config.Instance().ServerPort)
 }
