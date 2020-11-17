@@ -24,3 +24,5 @@ jobs:
     - name: Check Docker Version
       run: |
         docker --version
+        cat `${GITHUB_SHA::8}`
+
