@@ -3,16 +3,15 @@ name: Go
 on:
   push:
     branches: [ master ]
-  pull_request:
-    branches: [ master ]
 
 jobs:
 
   build:
     name: Build
     runs-on: ubuntu-latest
+    env:
+      Inoth: ${GITHUB_SHA::8}
     steps:
-
     - name: Set up Go 1.x
       uses: actions/setup-go@v2
       with:
@@ -24,5 +23,5 @@ jobs:
     - name: Check Docker Version
       run: |
         docker --version
-        cat `${GITHUB_SHA::8}`
+        echo $Inoth
 
